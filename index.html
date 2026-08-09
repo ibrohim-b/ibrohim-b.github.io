@@ -1,186 +1,1245 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
+<html lang="en"><head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Server Dashboard</title>
+
+    <meta name="description" content="Personal self-hosted infrastructure">
+
+    <meta name="theme-color" content="#242422">
+
+    <title>Infrastructure</title>
+
+    <!--
+        Claude-inspired typography:
+        Serif for editorial headings.
+        Sans-serif for interface elements.
+    -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&amp;family=Newsreader:opsz,wght@6..72,400;6..72,500&amp;display=swap" rel="stylesheet">
+
     <style>
+
+        /* =========================================================
+           DESIGN TOKENS
+        ========================================================= */
+
         :root {
-            --bg-color: #0d1117;
-            --card-bg: #161b22;
-            --card-border: #30363d;
-            --text-main: #f0f6fc;
-            --text-sub: #8b949e;
-            --accent-blue: #58a6ff;
-            --accent-green: #3fb950;
-            --accent-purple: #bc8cff;
-            --hover-bg: #21262d;
+
+            --background: #242422;
+            --background-soft: #2a2a27;
+            --background-hover: #30302d;
+
+            --surface: #292927;
+            --surface-hover: #30302d;
+
+            --border: rgba(245, 243, 234, 0.12);
+            --border-strong: rgba(245, 243, 234, 0.20);
+
+            --text: #f1eee5;
+            --text-soft: #c7c4ba;
+            --text-muted: #96938b;
+
+            --accent: #d97757;
+            --accent-soft: #e28a6c;
+
+            --success: #8fa36d;
+
+            --serif:
+                "Newsreader",
+                Georgia,
+                "Times New Roman",
+                serif;
+
+            --sans:
+                "DM Sans",
+                -apple-system,
+                BlinkMacSystemFont,
+                "Segoe UI",
+                sans-serif;
+
+            --sidebar-width: 230px;
         }
+
+
+        /* =========================================================
+           RESET
+        ========================================================= */
 
         * {
             box-sizing: border-box;
             margin: 0;
             padding: 0;
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        html {
+            scroll-behavior: smooth;
         }
 
         body {
-            background-color: var(--bg-color);
-            color: var(--text-main);
-            display: flex;
-            justify-content: center;
-            align-items: center;
             min-height: 100vh;
-            padding: 20px;
+
+            background: var(--background);
+            color: var(--text);
+
+            font-family: var(--sans);
+
+            -webkit-font-smoothing: antialiased;
+            text-rendering: optimizeLegibility;
         }
 
-        .container {
-            width: 100%;
-            max-width: 480px;
+        a {
+            color: inherit;
+            text-decoration: none;
+        }
+
+
+        /* =========================================================
+           APP SHELL
+        ========================================================= */
+
+        .app {
+            min-height: 100vh;
+            display: flex;
+        }
+
+
+        /* =========================================================
+           SIDEBAR
+        ========================================================= */
+
+        .sidebar {
+            width: var(--sidebar-width);
+            min-height: 100vh;
+
+            position: fixed;
+            left: 0;
+            top: 0;
+            bottom: 0;
+
+            padding: 28px 18px;
+
+            border-right: 1px solid var(--border);
+
             display: flex;
             flex-direction: column;
-            gap: 24px;
+
+            background: var(--background);
         }
 
-        .header {
-            text-align: center;
+
+        /* Brand */
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 11px;
+
+            padding: 0 9px;
+
+            margin-bottom: 42px;
         }
 
-        .header h1 {
-            font-size: 1.6rem;
-            font-weight: 600;
+        .brand-mark {
+            width: 25px;
+            height: 25px;
+
+            color: var(--accent);
+        }
+
+        .brand-name {
+            font-family: var(--serif);
+            font-size: 21px;
+            letter-spacing: -0.3px;
+        }
+
+
+        /* Navigation */
+
+        .nav-label {
+            padding: 0 10px;
+
             margin-bottom: 8px;
-            letter-spacing: -0.5px;
+
+            color: var(--text-muted);
+
+            font-size: 10px;
+            font-weight: 600;
+
+            letter-spacing: 1.2px;
+            text-transform: uppercase;
         }
 
-        .header p {
-            color: var(--text-sub);
-            font-size: 0.9rem;
+        .nav {
+            display: flex;
+            flex-direction: column;
+            gap: 3px;
         }
 
-        .status-badge {
+        .nav-item {
+            min-height: 40px;
+
+            display: flex;
+            align-items: center;
+            gap: 11px;
+
+            padding: 0 10px;
+
+            border-radius: 7px;
+
+            color: var(--text-muted);
+
+            font-size: 13px;
+
+            transition:
+                background 0.18s ease,
+                color 0.18s ease;
+        }
+
+        .nav-item svg {
+            width: 16px;
+            height: 16px;
+
+            stroke-width: 1.5;
+        }
+
+        .nav-item:hover {
+            background: var(--surface-hover);
+            color: var(--text);
+        }
+
+        .nav-item.active {
+            background: var(--surface);
+            color: var(--text);
+        }
+
+
+        /* Sidebar bottom */
+
+        .sidebar-bottom {
+            margin-top: auto;
+
+            padding: 14px 10px 4px;
+
+            border-top: 1px solid var(--border);
+        }
+
+        .server-location {
+            color: var(--text-muted);
+
+            font-size: 11px;
+            line-height: 1.5;
+        }
+
+        .server-location strong {
+            display: block;
+
+            margin-bottom: 2px;
+
+            color: var(--text-soft);
+
+            font-weight: 500;
+        }
+
+
+        /* =========================================================
+           MAIN
+        ========================================================= */
+
+        .main {
+            width: 100%;
+            min-width: 0;
+
+            margin-left: var(--sidebar-width);
+        }
+
+        .content {
+            width: 100%;
+            max-width: 920px;
+
+            margin: 0 auto;
+
+            padding:
+                62px
+                48px
+                80px;
+        }
+
+
+        /* =========================================================
+           MOBILE HEADER
+        ========================================================= */
+
+        .mobile-header {
+            display: none;
+        }
+
+
+        /* =========================================================
+           HERO
+        ========================================================= */
+
+        .hero {
+            max-width: 720px;
+
+            margin-bottom: 65px;
+        }
+
+        .eyebrow {
+            display: flex;
+            align-items: center;
+            gap: 9px;
+
+            margin-bottom: 20px;
+
+            color: var(--text-muted);
+
+            font-size: 11px;
+            font-weight: 500;
+
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+
+        .eyebrow-line {
+            width: 22px;
+            height: 1px;
+
+            background: var(--accent);
+        }
+
+        .hero h1 {
+            font-family: var(--serif);
+
+            font-size: clamp(44px, 6vw, 67px);
+            font-weight: 400;
+
+            line-height: 0.98;
+            letter-spacing: -2px;
+
+            color: var(--text);
+        }
+
+        .hero h1 em {
+            color: var(--accent);
+            font-style: normal;
+        }
+
+        .hero-description {
+            max-width: 560px;
+
+            margin-top: 24px;
+
+            color: var(--text-soft);
+
+            font-size: 15px;
+            line-height: 1.7;
+        }
+
+
+        /* =========================================================
+           STATUS
+        ========================================================= */
+
+        .status {
             display: inline-flex;
             align-items: center;
-            gap: 6px;
-            background-color: rgba(63, 185, 80, 0.1);
-            color: var(--accent-green);
-            padding: 4px 12px;
-            border-radius: 20px;
-            font-size: 0.8rem;
-            margin-top: 10px;
-            border: 1px solid rgba(63, 185, 80, 0.2);
+            gap: 8px;
+
+            margin-top: 25px;
+
+            padding: 7px 11px;
+
+            border: 1px solid var(--border);
+            border-radius: 999px;
+
+            color: var(--text-muted);
+
+            font-size: 11px;
         }
 
         .status-dot {
-            width: 8px;
-            height: 8px;
-            background-color: var(--accent-green);
+            width: 6px;
+            height: 6px;
+
             border-radius: 50%;
+
+            background: var(--success);
+
+            box-shadow:
+                0 0 0 3px rgba(143, 163, 109, 0.10);
         }
 
-        .grid {
+
+        /* =========================================================
+           SECTION HEADER
+        ========================================================= */
+
+        .section-header {
+            display: flex;
+            align-items: baseline;
+            justify-content: space-between;
+
+            margin-bottom: 17px;
+
+            padding-bottom: 11px;
+
+            border-bottom: 1px solid var(--border);
+        }
+
+        .section-title {
+            font-family: var(--serif);
+
+            font-size: 23px;
+            font-weight: 400;
+        }
+
+        .section-meta {
+            color: var(--text-muted);
+
+            font-size: 11px;
+        }
+
+
+        /* =========================================================
+           SERVICE LIST
+        ========================================================= */
+
+        .services {
             display: flex;
             flex-direction: column;
-            gap: 14px;
         }
 
-        .card {
-            background-color: var(--card-bg);
-            border: 1px solid var(--card-border);
-            border-radius: 12px;
-            padding: 18px 20px;
-            text-decoration: none;
-            color: inherit;
+        .service {
+            position: relative;
+
+            display: grid;
+
+            grid-template-columns:
+                50px
+                auto
+                1fr
+                auto;
+                
+            align-items: center;
+
+            gap: 17px;
+
+            min-height: 94px;
+
+            padding: 15px 16px;
+
+            border-bottom: 1px solid var(--border);
+
+            transition:
+                background 0.2s ease,
+                padding 0.2s ease;
+        }
+
+        .service:first-child {
+            border-top: 1px solid var(--border);
+        }
+
+        .service > div:nth-child(2) {
+            flex: 1; /* Pushes everything after it to the right */
+        }
+
+        .service:hover {
+            background: var(--surface);
+
+            padding-left: 21px;
+            padding-right: 21px;
+        }
+
+
+        /* Icon */
+
+        .service-icon {
+            width: 46px;
+            height: 46px;
+
+            display: grid;
+            place-items: center;
+
+            border: 1px solid var(--border);
+            border-radius: 9px;
+
+            color: var(--text-soft);
+
+            background: rgba(255,255,255,0.015);
+
+            transition:
+                border-color 0.2s ease,
+                color 0.2s ease;
+        }
+
+        .service:hover .service-icon {
+            border-color: rgba(217, 119, 87, 0.35);
+            color: var(--accent);
+        }
+
+        .service-icon svg {
+            width: 21px;
+            height: 21px;
+
+            stroke-width: 1.35;
+        }
+
+
+        /* Service information */
+
+        .service-name {
+            font-family: var(--serif);
+
+            font-size: 20px;
+            line-height: 1.1;
+
+            font-weight: 400;
+        }
+
+        .service-description {
+            margin-top: 5px;
+
+            color: var(--text-muted);
+
+            font-size: 12px;
+            line-height: 1.4;
+        }
+
+
+        /* Service status */
+
+        .service-status {
             display: flex;
             align-items: center;
-            justify-content: space-between;
-            transition: all 0.2s ease-in-out;
+            gap: 7px;
+
+            margin-right: 20px;
+
+            color: var(--text-muted);
+
+            font-size: 10px;
+
+            white-space: nowrap;
         }
 
-        .card:hover {
-            background-color: var(--hover-bg);
-            border-color: #8b949e;
-            transform: translateY(-2px);
+        .service-status-dot {
+            width: 5px;
+            height: 5px;
+
+            border-radius: 50%;
+
+            background: var(--success);
         }
 
-        .card-info {
+
+        /* Arrow */
+
+        .arrow {
+            width: 30px;
+            height: 30px;
+
+            display: grid;
+            place-items: center;
+
+            border: 1px solid transparent;
+            border-radius: 50%;
+
+            color: var(--text-muted);
+
+            transition:
+                background 0.2s ease,
+                border-color 0.2s ease,
+                color 0.2s ease,
+                transform 0.2s ease;
+        }
+
+        .service:hover .arrow {
+            background: var(--background-hover);
+
+            border-color: var(--border);
+
+            color: var(--text);
+
+            transform: translateX(2px);
+        }
+
+        .arrow svg {
+            width: 15px;
+            height: 15px;
+
+            stroke-width: 1.4;
+        }
+
+
+        /* =========================================================
+           INFRASTRUCTURE INFO
+        ========================================================= */
+
+        .infrastructure {
+            display: grid;
+
+            grid-template-columns: repeat(3, 1fr);
+
+            gap: 1px;
+
+            margin-top: 60px;
+
+            border: 1px solid var(--border);
+            border-radius: 10px;
+
+            overflow: hidden;
+
+            background: var(--border);
+        }
+
+        .info-item {
+            min-height: 92px;
+
+            padding: 18px;
+
+            background: var(--background);
+        }
+
+        .info-label {
+            margin-bottom: 8px;
+
+            color: var(--text-muted);
+
+            font-size: 10px;
+
+            letter-spacing: 0.8px;
+            text-transform: uppercase;
+        }
+
+        .info-value {
+            color: var(--text-soft);
+
+            font-family: var(--serif);
+
+            font-size: 17px;
+        }
+
+
+        /* =========================================================
+           FOOTER
+        ========================================================= */
+
+        footer {
             display: flex;
-            flex-direction: column;
-            gap: 4px;
+            justify-content: space-between;
+
+            margin-top: 60px;
+
+            color: var(--text-muted);
+
+            font-size: 10px;
+
+            letter-spacing: 0.2px;
         }
 
-        .card-title {
-            font-weight: 600;
-            font-size: 1.05rem;
+
+        /* =========================================================
+           MOBILE
+        ========================================================= */
+
+        @media (max-width: 760px) {
+
+            :root {
+                --sidebar-width: 0px;
+            }
+
+            body {
+                background: var(--background);
+            }
+
+            .sidebar {
+                display: none;
+            }
+
+            .main {
+                margin-left: 0;
+            }
+
+            .mobile-header {
+                height: 58px;
+
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+
+                padding: 0 18px;
+
+                border-bottom: 1px solid var(--border);
+            }
+
+            .mobile-brand {
+                display: flex;
+                align-items: center;
+                gap: 9px;
+
+                font-family: var(--serif);
+
+                font-size: 19px;
+            }
+
+            .mobile-mark {
+                color: var(--accent);
+            }
+
+            .mobile-status {
+                display: flex;
+                align-items: center;
+                gap: 6px;
+
+                color: var(--text-muted);
+
+                font-size: 9px;
+            }
+
+            .content {
+                padding:
+                    48px
+                    20px
+                    60px;
+            }
+
+            .hero {
+                margin-bottom: 48px;
+            }
+
+            .hero h1 {
+                font-size: 47px;
+                letter-spacing: -1.5px;
+            }
+
+            .hero-description {
+                font-size: 14px;
+                line-height: 1.65;
+            }
+
+            .section-title {
+                font-size: 21px;
+            }
+
+            .service {
+                grid-template-columns:
+                    45px
+                    1fr
+                    26px;
+
+                gap: 13px;
+
+                min-height: 88px;
+
+                padding: 13px 8px;
+            }
+
+            .service:hover {
+                padding-left: 8px;
+                padding-right: 8px;
+            }
+
+            .service-icon {
+                width: 42px;
+                height: 42px;
+            }
+
+            .service-name {
+                font-size: 18px;
+            }
+
+            .service-description {
+                font-size: 11px;
+            }
+
+            .service-status {
+                display: none;
+            }
+
+            .infrastructure {
+                grid-template-columns: 1fr;
+            }
+
+            .info-item {
+                min-height: auto;
+            }
+
+            footer {
+                flex-direction: column;
+                gap: 7px;
+            }
         }
 
-        .card-desc {
-            font-size: 0.85rem;
-            color: var(--text-sub);
+
+        /* =========================================================
+           SMALL PHONES
+        ========================================================= */
+
+        @media (max-width: 380px) {
+
+            .content {
+                padding-left: 16px;
+                padding-right: 16px;
+            }
+
+            .hero h1 {
+                font-size: 41px;
+            }
+
+            .service-description {
+                max-width: 190px;
+            }
         }
 
-        .card-arrow {
-            color: var(--text-sub);
-            font-size: 1.2rem;
-            transition: transform 0.2s ease;
+
+        /* =========================================================
+           ACCESSIBILITY
+        ========================================================= */
+
+        :focus-visible {
+            outline: 1px solid var(--accent);
+            outline-offset: 4px;
         }
 
-        .card:hover .card-arrow {
-            color: var(--text-main);
-            transform: translateX(4px);
+        @media (prefers-reduced-motion: reduce) {
+
+            *,
+            *::before,
+            *::after {
+                transition: none !important;
+                animation: none !important;
+            }
         }
 
-        .footer {
-            text-align: center;
-            font-size: 0.75rem;
-            color: var(--text-sub);
-        }
     </style>
 </head>
+
+
 <body>
 
-<div class="container">
-    <div class="header">
-        <h1>Lightsail Infrastructure</h1>
-        <p>Stockholm Region • AWS Node</p>
-        <div class="status-badge">
-            <span class="status-dot"></span> All Systems Operational
+<div class="app">
+
+
+    <!-- =========================================================
+         DESKTOP SIDEBAR
+    ========================================================== -->
+
+    <aside class="sidebar">
+
+        <div class="brand">
+
+            <!-- Anthropic-inspired star mark -->
+            <svg class="brand-mark" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M16 2V30" stroke="currentColor" stroke-width="2"></path>
+                <path d="M2 16H30" stroke="currentColor" stroke-width="2"></path>
+                <path d="M6 6L26 26" stroke="currentColor" stroke-width="2"></path>
+                <path d="M26 6L6 26" stroke="currentColor" stroke-width="2"></path>
+            </svg>
+
+            <span class="brand-name">
+                Ibrohim-b
+            </span>
+
         </div>
-    </div>
 
-    <div class="grid">
-        <!-- WireGuard Web Manager -->
-        <a href="http://13.61.219.40:51821" target="_blank" class="card">
-            <div class="card-info">
-                <span class="card-title" style="color: var(--accent-blue);">WireGuard Admin</span>
-                <span class="card-desc">VPN client profiles & connection management</span>
+
+        <div class="nav-label">
+            Workspace
+        </div>
+
+        <nav class="nav">
+
+            <a href="#" class="nav-item active">
+
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                    <rect x="3" y="3" width="7" height="7" rx="1"></rect>
+                    <rect x="14" y="3" width="7" height="7" rx="1"></rect>
+                    <rect x="3" y="14" width="7" height="7" rx="1"></rect>
+                    <rect x="14" y="14" width="7" height="7" rx="1"></rect>
+                </svg>
+
+                Overview
+
+            </a>
+
+
+            <a href="#services" class="nav-item">
+
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                    <path d="M12 2v20"></path>
+                    <path d="M2 12h20"></path>
+                    <circle cx="12" cy="12" r="9"></circle>
+                </svg>
+
+                Services
+
+            </a>
+
+
+            <a href="#infrastructure" class="nav-item">
+
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                    <rect x="4" y="3" width="16" height="18" rx="2"></rect>
+                    <path d="M8 7h8"></path>
+                    <path d="M8 11h8"></path>
+                    <path d="M8 15h5"></path>
+                </svg>
+
+                Infrastructure
+
+            </a>
+
+        </nav>
+
+
+        <div class="sidebar-bottom">
+
+            <div class="server-location">
+
+                <strong>Stockholm Region</strong>
+
+                AWS Lightsail · Docker
+
             </div>
-            <span class="card-arrow">&rarr;</span>
-        </a>
 
-        <!-- Uptime Kuma -->
-        <a href="http://13.61.219.40:3001" target="_blank" class="card">
-            <div class="card-info">
-                <span class="card-title" style="color: var(--accent-green);">Uptime Kuma</span>
-                <span class="card-desc">Server health monitoring & latency checks</span>
+        </div>
+
+    </aside>
+
+
+    <!-- =========================================================
+         MAIN
+    ========================================================== -->
+
+    <main class="main">
+
+
+        <!-- Mobile navigation -->
+
+        <header class="mobile-header">
+
+            <div class="mobile-brand">
+
+                <span class="mobile-mark">✳</span>
+
+                Infrastructure
+
             </div>
-            <span class="card-arrow">&rarr;</span>
-        </a>
 
-        <!-- Add future services here easily -->
-        <!-- <a href="http://13.61.219.40:8080" target="_blank" class="card">
-            <div class="card-info">
-                <span class="card-title" style="color: var(--accent-purple);">Future Service</span>
-                <span class="card-desc">Vaultwarden / File Browser / Custom App</span>
+            <div class="mobile-status">
+
+                <span class="status-dot"></span>
+
+                ONLINE
+
             </div>
-            <span class="card-arrow">&rarr;</span>
-        </a> -->
-    </div>
 
-    <div class="footer">
-        Hosted on GitHub Pages • Managed via Docker
-    </div>
+        </header>
+
+
+        <div class="content">
+
+
+            <!-- =================================================
+                 HERO
+            ================================================== -->
+
+            <section class="hero">
+
+                <div class="eyebrow">
+
+                    <span class="eyebrow-line"></span>
+
+                    Private infrastructure
+
+                </div>
+
+
+                <h1>
+                    Everything you need,<br>
+                    <em>in one place.</em>
+                </h1>
+
+
+                
+
+
+                
+
+            </section>
+
+
+
+            <!-- =================================================
+                 SERVICES
+            ================================================== -->
+
+            <section id="services">
+
+                <div class="section-header">
+
+                    <h2 class="section-title">
+                        Services
+                    </h2>
+
+                    <span class="section-meta">
+                        3 available
+                    </span>
+
+                </div>
+
+
+                <div class="services">
+
+
+                    <!-- =========================================
+                         WIREGUARD
+                    ========================================== -->
+
+                    <a href="http://13.61.219.40:51821" target="_blank" rel="noopener noreferrer" class="service">
+
+                        <div class="service-icon">
+
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+
+                                <rect x="4" y="10" width="16" height="11" rx="2"></rect>
+
+                                <path d="M8 10V7a4 4 0 0 1 8 0v3"></path>
+
+                                <circle cx="12" cy="15.5" r="1.3"></circle>
+
+                            </svg>
+
+                        </div>
+
+
+                        <div>
+
+                            <div class="service-name">
+                                WireGuard Admin
+                            </div>
+
+                            <div class="service-description">
+                                VPN profiles and connection management
+                            </div>
+
+                        </div>
+
+
+                        <div class="service-status">
+
+                            <span class="service-status-dot"></span>
+
+                            Operational
+
+                        </div>
+
+
+                        <div class="arrow">
+
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                                <path d="M5 12h13"></path>
+                                <path d="m13 6 6 6-6 6"></path>
+                            </svg>
+
+                        </div>
+
+                    </a>
+
+
+
+                    <!-- =========================================
+                         UPTIME KUMA
+                    ========================================== -->
+
+                    <a href="http://13.61.219.40:3001" target="_blank" rel="noopener noreferrer" class="service">
+
+                        <div class="service-icon">
+
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+
+                                <path d="M3 12h4l2.5-7 5 14 2.5-7H21"></path>
+
+                            </svg>
+
+                        </div>
+
+
+                        <div>
+
+                            <div class="service-name">
+                                Uptime Kuma
+                            </div>
+
+                            <div class="service-description">
+                                Infrastructure health and uptime monitoring
+                            </div>
+
+                        </div>
+
+
+                        <div class="service-status">
+
+                            <span class="service-status-dot"></span>
+
+                            Operational
+
+                        </div>
+
+
+                        <div class="arrow">
+
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                                <path d="M5 12h13"></path>
+                                <path d="m13 6 6 6-6 6"></path>
+                            </svg>
+
+                        </div>
+
+                    </a>
+
+
+
+                    <!-- =========================================
+                         TTYD
+                    ========================================== -->
+
+                   <a href="http://13.61.219.40:7681" target="_blank" rel="noopener noreferrer" class="service">
+
+                        <div class="service-icon">
+                            <!-- Terminal / Code Prompt Icon -->
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <polyline points="4 17 10 11 4 5"></polyline>
+                                <line x1="12" y1="19" x2="20" y2="19"></line>
+                            </svg>
+                        </div>
+
+                        <div>
+                            <div class="service-name">
+                                Web Terminal
+                            </div>
+
+                            <div class="service-description">
+                                Password-protected SSH terminal access (ttyd)
+                            </div>
+                        </div>
+
+                        <div class="service-status">
+                            <span class="service-status-dot"></span>
+                            Operational
+                        </div>
+
+                        <div class="arrow">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M5 12h13"></path>
+                                <path d="m13 6 6 6-6 6"></path>
+                            </svg>
+                        </div>
+
+                    </a>
+
+
+                    <!--
+                    =================================================
+                    ADD ANOTHER SERVICE
+                    =================================================
+
+                    <a
+                        href="http://13.61.219.40:8080"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        class="service"
+                    >
+
+                        <div class="service-icon">
+
+                            YOUR SVG ICON
+
+                        </div>
+
+                        <div>
+
+                            <div class="service-name">
+                                File Browser
+                            </div>
+
+                            <div class="service-description">
+                                Personal file management
+                            </div>
+
+                        </div>
+
+                        <div class="service-status">
+
+                            <span class="service-status-dot"></span>
+
+                            Operational
+
+                        </div>
+
+                        <div class="arrow">
+                            →
+                        </div>
+
+                    </a>
+
+                    -->
+
+                </div>
+
+            </section>
+
+
+
+            <!-- =================================================
+                 INFRASTRUCTURE
+            ================================================== -->
+
+            <section id="infrastructure" class="infrastructure">
+
+                <div class="info-item">
+
+                    <div class="info-label">
+                        Region
+                    </div>
+
+                    <div class="info-value">
+                        Stockholm
+                    </div>
+
+                </div>
+
+
+                <div class="info-item">
+
+                    <div class="info-label">
+                        Platform
+                    </div>
+
+                    <div class="info-value">
+                        AWS Lightsail
+                    </div>
+
+                </div>
+
+
+                
+
+            </section>
+
+
+
+            
+
+            
+
+
+        </div>
+
+    </main>
+
 </div>
 
-</body>
-</html>
+
+</body></html>
