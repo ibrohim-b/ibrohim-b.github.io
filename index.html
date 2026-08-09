@@ -687,6 +687,12 @@
                 color: var(--accent);
             }
 
+            .mobile-mark svg {
+                width: 18px;
+                height: 18px;
+                color: var(--accent);
+            }
+
             .mobile-status {
                 display: flex;
                 align-items: center;
@@ -921,7 +927,14 @@
 
             <div class="mobile-brand">
 
-                <span class="mobile-mark">✳</span>
+               <span class="mobile-mark">
+                    <svg class="brand-mark" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path stroke="currentColor" stroke-width="2" d="M16 2V30"></path>
+                        <path stroke="currentColor" stroke-width="2" d="M2 16H30"></path>
+                        <path d="M6 6L26 26" stroke="currentColor" stroke-width="2"></path>
+                        <path d="M26 6L6 26" stroke="currentColor" stroke-width="2"></path>
+                    </svg>
+                </span>
 
                 Infrastructure
 
