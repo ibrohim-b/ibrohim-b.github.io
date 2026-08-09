@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Server Dashboard</title>
+    <style>
+        :root {
+            --bg-color: #0d1117;
+            --card-bg: #161b22;
+            --card-border: #30363d;
+            --text-main: #f0f6fc;
+            --text-sub: #8b949e;
+            --accent-blue: #58a6ff;
+            --accent-green: #3fb950;
+            --accent-purple: #bc8cff;
+            --hover-bg: #21262d;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 480px;
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+        }
+
+        .header {
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 1.6rem;
+            font-weight: 600;
+            margin-bottom: 8px;
+            letter-spacing: -0.5px;
+        }
+
+        .header p {
+            color: var(--text-sub);
+            font-size: 0.9rem;
+        }
+
+        .status-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background-color: rgba(63, 185, 80, 0.1);
+            color: var(--accent-green);
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            margin-top: 10px;
+            border: 1px solid rgba(63, 185, 80, 0.2);
+        }
+
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            background-color: var(--accent-green);
+            border-radius: 50%;
+        }
+
+        .grid {
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+        }
+
+        .card {
+            background-color: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 12px;
+            padding: 18px 20px;
+            text-decoration: none;
+            color: inherit;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            transition: all 0.2s ease-in-out;
+        }
+
+        .card:hover {
+            background-color: var(--hover-bg);
+            border-color: #8b949e;
+            transform: translateY(-2px);
+        }
+
+        .card-info {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .card-title {
+            font-weight: 600;
+            font-size: 1.05rem;
+        }
+
+        .card-desc {
+            font-size: 0.85rem;
+            color: var(--text-sub);
+        }
+
+        .card-arrow {
+            color: var(--text-sub);
+            font-size: 1.2rem;
+            transition: transform 0.2s ease;
+        }
+
+        .card:hover .card-arrow {
+            color: var(--text-main);
+            transform: translateX(4px);
+        }
+
+        .footer {
+            text-align: center;
+            font-size: 0.75rem;
+            color: var(--text-sub);
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="header">
+        <h1>Lightsail Infrastructure</h1>
+        <p>Stockholm Region • AWS Node</p>
+        <div class="status-badge">
+            <span class="status-dot"></span> All Systems Operational
+        </div>
+    </div>
+
+    <div class="grid">
+        <!-- WireGuard Web Manager -->
+        <a href="http://13.61.219.40:51821" target="_blank" class="card">
+            <div class="card-info">
+                <span class="card-title" style="color: var(--accent-blue);">WireGuard Admin</span>
+                <span class="card-desc">VPN client profiles & connection management</span>
+            </div>
+            <span class="card-arrow">&rarr;</span>
+        </a>
+
+        <!-- Uptime Kuma -->
+        <a href="http://13.61.219.40:3001" target="_blank" class="card">
+            <div class="card-info">
+                <span class="card-title" style="color: var(--accent-green);">Uptime Kuma</span>
+                <span class="card-desc">Server health monitoring & latency checks</span>
+            </div>
+            <span class="card-arrow">&rarr;</span>
+        </a>
+
+        <!-- Add future services here easily -->
+        <a href="http://13.61.219.40:8080" target="_blank" class="card">
+            <div class="card-info">
+                <span class="card-title" style="color: var(--accent-purple);">Future Service</span>
+                <span class="card-desc">Vaultwarden / File Browser / Custom App</span>
+            </div>
+            <span class="card-arrow">&rarr;</span>
+        </a>
+    </div>
+
+    <div class="footer">
+        Hosted on GitHub Pages • Managed via Docker
+    </div>
+</div>
+
+</body>
+</html>
